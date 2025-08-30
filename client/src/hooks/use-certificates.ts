@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { Certificate, SearchCertificatesParams } from "@shared/schema";
+import { API_BASE_URL } from "@/lib/api";
 
 export function useCertificates(params?: Partial<SearchCertificatesParams>) {
   const queryParams = new URLSearchParams();
@@ -11,7 +12,7 @@ export function useCertificates(params?: Partial<SearchCertificatesParams>) {
   const { data: certificates, isLoading, error, refetch } = useQuery<Certificate[]>({
     queryKey: ["/api/certificates", queryParams.toString()],
     queryFn: () => {
-      const url = `/api/certificates${queryParams.toString() ? `?${queryParams.toString()}` : ''}`;
+      const url = `${API_BASE_URL}/api/certificates${queryParams.toString() ? `?${queryParams.toString()}` : ''}`;
       return fetch(url, { credentials: 'include' })
         .then(res => {
           if (!res.ok) throw new Error('Failed to fetch certificates');
@@ -34,6 +35,14 @@ export function useCertificate(id: string) {
   const { data: certificate, isLoading, error } = useQuery<Certificate>({
     queryKey: ["/api/certificates", id],
     enabled: !!id,
+    queryFn: () => {
+      const url = `${API_BASE_URL}/api/certificates/${id}`;
+      return fetch(url, { credentials: 'include' })
+        .then(res => {
+          if (!res.ok) throw new Error('Failed to fetch certificate');
+          return res.json();
+        });
+    },
   });
 
   return {
