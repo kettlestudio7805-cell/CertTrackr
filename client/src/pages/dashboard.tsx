@@ -10,7 +10,7 @@ import { useCertificates } from "@/hooks/use-certificates";
 import { useSearch } from "@/hooks/use-search";
 import { Certificate } from "@shared/schema";
 import { Link } from "wouter";
-import { apiRequest } from "@/lib/queryClient";
+import { apiRequest } from "@/lib/api";
 
 export default function Dashboard() {
   const [selectedCertificate, setSelectedCertificate] = useState<Certificate | null>(null);
